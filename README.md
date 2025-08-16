@@ -1,5 +1,4 @@
 
-
 <head>
     <meta charset="UTF-8">
     <title>健檢流程控制台</title>
@@ -160,7 +159,7 @@
             }
 
             let password = prompt("請輸入驗證字串以確認");
-            if (!password || password.toLowerCase() !== "s1") {
+            if (!password || password.trim().toLowerCase() !== "s1") {
                 alert("驗證錯誤，請重新操作！");
                 return;
             }
@@ -193,6 +192,7 @@
                 div.appendChild(btn);
                 specialDiv.appendChild(div);
 
+                // 恢復按鈕完成狀態
                 if (localStorage.getItem(id) === "done") {
                     btn.classList.add("done");
                     if (!btn.textContent.includes("✅")) btn.textContent += " ✅";
@@ -213,7 +213,8 @@
         function markDone(button) {
             let input = prompt("請由操作人員輸入完成驗證");
             if (!input) return;
-            input = input.toLowerCase();
+            input = input.trim().toLowerCase(); // ← 去空格+轉小寫
+
             if (input === "oo") {
                 button.classList.add("done");
                 if (!button.textContent.includes("✅")) button.textContent += " ✅";
@@ -231,7 +232,7 @@
         function goBack() {
             alert("請找諮詢人員處理");
             let pw = prompt("輸入驗證字串以返回");
-            if (pw && pw.toLowerCase() === "s2") {
+            if (pw && pw.trim().toLowerCase() === "s2") {
                 localStorage.removeItem("selectedSpecialItems");
 
                 // 取消勾選 + 解鎖
