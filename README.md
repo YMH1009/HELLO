@@ -1,6 +1,4 @@
 
-<html lang="zh-Hant">
-
 <head>
     <meta charset="UTF-8">
     <title>健檢流程控制台</title>
