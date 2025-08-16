@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="zh-Hant">
 
 <head>
@@ -109,4 +109,4 @@
     <h3>勿自行操作</h3>
 </body>
 
-</html>
+
