@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
@@ -107,3 +109,4 @@
     <h3>勿自行操作</h3>
 </body>
 
+</html>
