@@ -215,7 +215,7 @@
             if (!input) return;
             input = input.trim().toLowerCase(); // ← 去空格+轉小寫
 
-            if (input === "ook") {
+            if (input === "ok") {
                 button.classList.add("done");
                 if (!button.textContent.includes("✅")) button.textContent += " ✅";
                 localStorage.setItem(button.id, "done");
