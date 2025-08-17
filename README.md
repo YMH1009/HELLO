@@ -91,16 +91,25 @@
             margin: 5px 0;
         }
 
-        .package-items label {
-            display: block;
-            text-align: left;
-            margin: 2px 0;
+        .package-items {
+            margin-top: 5px;
         }
 
-        .price-label {
-            font-size: 12px;
-            color: #555;
-            margin-left: 5px;
+        .package-items button {
+            display: block;
+            width: 120px;
+            height: 40px;
+            margin: 5px auto;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            background-color: #eee;
+            cursor: pointer;
+        }
+
+        .package-items button.selected {
+            background-color: #1E90FF;
+            color: white;
         }
 
         #selectedOptions button {
@@ -115,28 +124,28 @@
         <h2>加選項目 (8選2)</h2>
         <div id="options">
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">腹部超音波</button>
+                <button class="btn" id="opt1" onclick="toggleOption(this)">腹部超音波</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">婦科超音波</button>
+                <button class="btn" id="opt2" onclick="toggleOption(this)">婦科超音波</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">頸動脈超音波</button>
+                <button class="btn" id="opt3" onclick="toggleOption(this)">頸動脈超音波</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">甲狀腺超音波</button>
+                <button class="btn" id="opt4" onclick="toggleOption(this)">甲狀腺超音波</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">攝護腺超音波</button>
+                <button class="btn" id="opt5" onclick="toggleOption(this)">攝護腺超音波</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">HRV</button>
+                <button class="btn" id="opt6" onclick="toggleOption(this)">HRV</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">眼底攝影</button>
+                <button class="btn" id="opt7" onclick="toggleOption(this)">眼底攝影</button>
             </div>
             <div class="option">
-                <button class="btn" onclick="toggleOption(this)">動脈硬化</button>
+                <button class="btn" id="opt8" onclick="toggleOption(this)">動脈硬化</button>
             </div>
         </div>
 
@@ -147,157 +156,73 @@
         <div id="addons" class="hidden">
             <h3>加做項目套餐</h3>
             <div id="top-packages" class="package-section">
+                <!-- A套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgA" onclick="togglePackage('A')">A套餐</button>
                     <div class="package-items" id="itemsA">
-                        <label>
-                            <input type="checkbox" data-price="900" class="manual">同半胱胺酸
-                            <span class="price-label">900元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="900" class="manual">高敏感C反應蛋白
-                            <span class="price-label">900元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">心肌旋轉蛋白
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="1600" class="manual">B型利納肽前驅物
-                            <span class="price-label">1600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="Aselect" data-price="1200" class="manual">頸動脈超音波
-                            <span class="price-label">1200元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="Aselect" data-price="1200" class="manual">眼底攝影
-                            <span class="price-label">1200元</span>
-                        </label>
+                        <button data-price="900" class="pkg-item" data-pkg="A" id="pkgA1">同半胱胺酸 900元</button>
+                        <button data-price="900" class="pkg-item" data-pkg="A" id="pkgA2">高敏感C反應蛋白 900元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="A" id="pkgA3">心肌旋轉蛋白 800元</button>
+                        <button data-price="1600" class="pkg-item" data-pkg="A" id="pkgA4">B型利納肽前驅物 1600元</button>
+                        <button data-price="1200" class="pkg-item" data-pkg="A" data-single="true" id="pkgA5">頸動脈超音波 1200元</button>
+                        <button data-price="1200" class="pkg-item" data-pkg="A" data-single="true" id="pkgA6">眼底攝影 1200元</button>
                     </div>
                 </div>
+                <!-- B套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgB" onclick="togglePackage('B')">B套餐</button>
                     <div class="package-items" id="itemsB">
-                        <label>
-                            <input type="checkbox" data-price="900" class="manual">甲狀腺功能
-                            <span class="price-label">900元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">自體免疫疾病檢查
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="500" class="manual">電解質檢查
-                            <span class="price-label">500元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">B肝抗原抗體
-                            <span class="price-label">600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">C肝檢查
-                            <span class="price-label">600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">胰島素
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">維生素D
-                            <span class="price-label">800元</span>
-                        </label>
+                        <button data-price="900" class="pkg-item" data-pkg="B" id="pkgB1">甲狀腺功能 900元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="B" id="pkgB2">自體免疫疾病檢查 800元</button>
+                        <button data-price="500" class="pkg-item" data-pkg="B" id="pkgB3">電解質檢查 500元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="B" id="pkgB4">B肝抗原抗體 600元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="B" id="pkgB5">C肝檢查 600元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="B" id="pkgB6">胰島素 800元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="B" id="pkgB7">維生素D 800元</button>
                     </div>
                 </div>
+                <!-- C套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgC" onclick="togglePackage('C')">C套餐</button>
                     <div class="package-items" id="itemsC">
-                        <label>
-                            <input type="checkbox" data-price="500" class="manual">解肢酶
-                            <span class="price-label">500元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">胃癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="700" class="manual">胰臟癌
-                            <span class="price-label">700元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="1200" class="manual">C13
-                            <span class="price-label">1200元</span>
-                        </label>
+                        <button data-price="500" class="pkg-item" data-pkg="C" id="pkgC1">解肢酶 500元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="C" id="pkgC2">胃癌 800元</button>
+                        <button data-price="700" class="pkg-item" data-pkg="C" id="pkgC3">胰臟癌 700元</button>
+                        <button data-price="1200" class="pkg-item" data-pkg="C" id="pkgC4">C13 1200元</button>
                     </div>
                 </div>
             </div>
 
             <div id="bottom-packages" class="package-section">
+                <!-- D套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgD" onclick="togglePackage('D')">D套餐(男)</button>
                     <div class="package-items" id="itemsD">
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">鼻咽癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">鱗狀上皮細胞癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">肺腺癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="700" class="manual">肺癌
-                            <span class="price-label">700元</span>
-                        </label>
+                        <button data-price="800" class="pkg-item" data-pkg="D" id="pkgD1">鼻咽癌 800元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="D" id="pkgD2">鱗狀上皮細胞癌 800元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="D" id="pkgD3">肺腺癌 800元</button>
+                        <button data-price="700" class="pkg-item" data-pkg="D" id="pkgD4">肺癌 700元</button>
                     </div>
                 </div>
+                <!-- E套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgE" onclick="togglePackage('E')">E套餐(女)</button>
                     <div class="package-items" id="itemsE">
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">鱗狀上皮細胞癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">肺腺癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="800" class="manual">卵巢癌
-                            <span class="price-label">800元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="700" class="manual">肺癌
-                            <span class="price-label">700元</span>
-                        </label>
+                        <button data-price="800" class="pkg-item" data-pkg="E" id="pkgE1">鱗狀上皮細胞癌 800元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="E" id="pkgE2">肺腺癌 800元</button>
+                        <button data-price="800" class="pkg-item" data-pkg="E" id="pkgE3">卵巢癌 800元</button>
+                        <button data-price="700" class="pkg-item" data-pkg="E" id="pkgE4">肺癌 700元</button>
                     </div>
                 </div>
+                <!-- F套餐 -->
                 <div class="package-box">
                     <button class="btn" id="pkgF" onclick="togglePackage('F')">F套餐</button>
                     <div class="package-items" id="itemsF">
-                        <label>
-                            <input type="checkbox" data-price="900" class="manual">腎上腺皮質素
-                            <span class="price-label">900元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">睪固酮(男)
-                            <span class="price-label">600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">雌二醇(女)
-                            <span class="price-label">600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">黃體生成激素
-                            <span class="price-label">600元</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" data-price="600" class="manual">濾泡刺激素
-                            <span class="price-label">600元</span>
-                        </label>
+                        <button data-price="900" class="pkg-item" data-pkg="F" id="pkgF1">腎上腺皮質素 900元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="F" id="pkgF2">睪固酮(男) 600元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="F" id="pkgF3">雌二醇(女) 600元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="F" id="pkgF4">黃體生成激素 600元</button>
+                        <button data-price="600" class="pkg-item" data-pkg="F" id="pkgF5">濾泡刺激素 600元</button>
                     </div>
                 </div>
             </div>
@@ -350,6 +275,7 @@
             if (btn.classList.contains("selected")) {
                 btn.classList.remove("selected");
                 selected = selected.filter(x => x !== btn.textContent);
+                localStorage.removeItem(btn.id);
             } else {
                 if (selected.length >= 2) {
                     alert("最多選2個");
@@ -357,6 +283,7 @@
                 }
                 btn.classList.add("selected");
                 selected.push(btn.textContent);
+                localStorage.setItem(btn.id, "selected");
             }
         }
 
@@ -374,64 +301,48 @@
                 E: 2000,
                 F: 2000
             };
-
             if (pkg === "D") {
                 document.getElementById("pkgE").classList.remove("selected");
                 packageTotals["E"] = 0;
+                localStorage.removeItem("pkgE");
             }
             if (pkg === "E") {
                 document.getElementById("pkgD").classList.remove("selected");
                 packageTotals["D"] = 0;
+                localStorage.removeItem("pkgD");
             }
-
             btn.classList.toggle("selected");
             packageTotals[pkg] = btn.classList.contains("selected") ? packagePrice[pkg] : 0;
-
-            let inputs = document.querySelectorAll("#items" + pkg + " input");
-            if (pkg === "A" && btn.classList.contains("selected")) {
-                let twoOptions = document.querySelectorAll("#itemsA input[name='Aselect']");
-                twoOptions.forEach(x => x.checked = false);
-                let randIndex = Math.floor(Math.random() * twoOptions.length);
-                twoOptions[randIndex].checked = true;
-                inputs.forEach(inp => {
-                    if (inp.name !== "Aselect") inp.checked = true;
-                });
-            } else {
-                inputs.forEach(inp => inp.checked = btn.classList.contains("selected"));
-            }
-
+            if (btn.classList.contains("selected")) localStorage.setItem("pkg" + pkg, "selected");
+            else localStorage.removeItem("pkg" + pkg);
+            document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
+                if (btn.classList.contains("selected")) innerBtn.classList.add("selected");
+                else innerBtn.classList.remove("selected");
+            });
             updateTotal();
         }
 
-        document.querySelectorAll("#itemsA input[name='Aselect']").forEach(r => {
-            r.addEventListener("click", function () {
-                if (this.checked) {
-                    if (this.dataset.waschecked === "true") {
-                        this.checked = false;
-                        this.dataset.waschecked = "false";
-                    } else {
-                        document.querySelectorAll("#itemsA input[name='Aselect']").forEach(x => {
-                            x.checked = false;
-                            x.dataset.waschecked = "false";
-                        });
-                        this.checked = true;
-                        this.dataset.waschecked = "true";
-                    }
-                } else this.dataset.waschecked = "false";
-                updateTotal();
+        // 內部按鈕
+        document.querySelectorAll(".pkg-item").forEach(btn => {
+            btn.addEventListener("click", function () {
+                let pkg = btn.dataset.pkg;
+                if (!document.getElementById("pkg" + pkg).classList.contains("selected")) {
+                    btn.classList.toggle("selected");
+                    if (btn.classList.contains("selected")) localStorage.setItem(btn.id, "selected");
+                    else localStorage.removeItem(btn.id);
+                    updateTotal();
+                }
             });
-        });
-
-        document.querySelectorAll(".manual").forEach(input => {
-            input.addEventListener("change", updateTotal);
         });
 
         function updateTotal() {
             let sum = 0;
-            for (let key in packageTotals) sum += packageTotals[key];
-            document.querySelectorAll(".manual:checked").forEach(inp => {
-                if (!inp.closest(".package-box").querySelector("button").classList.contains("selected"))
-                    sum += parseInt(inp.dataset.price);
+            for (let k in packageTotals) sum += packageTotals[k];
+            document.querySelectorAll(".pkg-item.selected").forEach(btn => {
+                let pkg = btn.dataset.pkg;
+                if (!document.getElementById("pkg" + pkg).classList.contains("selected")) {
+                    sum += parseInt(btn.dataset.price);
+                }
             });
             document.getElementById("total").textContent = "總金額: " + sum + " 元";
         }
@@ -448,7 +359,7 @@
             }
             document.getElementById("page1").classList.add("hidden");
             document.getElementById("page2").classList.remove("hidden");
-
+            localStorage.setItem("currentPage", "page2");
             renderSelectedOptions();
         }
 
@@ -462,26 +373,34 @@
                 btn.id = name;
                 btn.onclick = function () {
                     markDone(btn);
-                };
+                }
                 box.appendChild(btn);
             });
-
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
                 if (document.getElementById("pkg" + pkg).classList.contains("selected")) {
-                    document.getElementById("items" + pkg).querySelectorAll("input").forEach(inp => {
+                    document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
                         let btn = document.createElement("button");
                         btn.className = "btn";
-                        btn.textContent = inp.parentNode.textContent.replace(/\d+元$/, "");
-                        btn.id = pkg + "-" + inp.parentNode.textContent;
+                        btn.textContent = innerBtn.textContent;
+                        btn.id = pkg + "-" + innerBtn.textContent;
                         btn.onclick = function () {
                             markDone(btn);
-                        };
+                        }
+                        box.appendChild(btn);
+                    });
+                } else {
+                    document.querySelectorAll("#items" + pkg + " .pkg-item.selected").forEach(innerBtn => {
+                        let btn = document.createElement("button");
+                        btn.className = "btn";
+                        btn.textContent = innerBtn.textContent;
+                        btn.id = pkg + "-" + innerBtn.textContent;
+                        btn.onclick = function () {
+                            markDone(btn);
+                        }
                         box.appendChild(btn);
                     });
                 }
             });
-
-            // 回存 localStorage 已做狀態
             document.querySelectorAll("#selectedOptions button").forEach(btn => {
                 if (localStorage.getItem(btn.id) === "done") {
                     btn.classList.add("done");
@@ -495,14 +414,15 @@
             if (pw && pw.toLowerCase() === "s2") {
                 document.getElementById("page2").classList.add("hidden");
                 document.getElementById("page1").classList.remove("hidden");
+                localStorage.setItem("currentPage", "page1");
             }
         }
 
         function markDone(button) {
-            let input = prompt("輸入 'ook' 標示完成，'xx' 取消完成");
+            let input = prompt("輸入 'ok' 標示完成，'xx' 取消完成");
             if (!input) return;
             input = input.toLowerCase();
-            if (input === "ook") {
+            if (input === "ok") {
                 button.classList.add("done");
                 if (!button.textContent.includes("✅")) button.textContent += " ✅";
                 localStorage.setItem(button.id, "done");
@@ -513,45 +433,36 @@
             } else alert("輸入錯誤，請重新操作！");
         }
 
-        // 預載 localStorage 狀態
         window.onload = function () {
-            ["heigh", "fat", "blood", "dr", "xray"].forEach(id => {
-                let status = localStorage.getItem(id);
-                if (status === "done") {
-                    let btn = document.getElementById(id);
+            selected = [];
+            for (let i = 1; i <= 8; i++) {
+                let btn = document.getElementById("opt" + i);
+                if (localStorage.getItem(btn.id) === "selected" && selected.length < 2) {
+                    btn.classList.add("selected");
+                    selected.push(btn.textContent);
+                } else {
+                    btn.classList.remove("selected");
+                    localStorage.removeItem(btn.id);
+                }
+            }
+            ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
+                if (localStorage.getItem("pkg" + pkg) === "selected") togglePackage(pkg);
+            });
+            document.querySelectorAll(".pkg-item").forEach(btn => {
+                if (localStorage.getItem(btn.id) === "selected") btn.classList.add("selected");
+            });
+            document.querySelectorAll(".station .btn").forEach(btn => {
+                if (localStorage.getItem(btn.id) === "done") {
                     btn.classList.add("done");
                     if (!btn.textContent.includes("✅")) btn.textContent += " ✅";
                 }
             });
-
-            // 恢復先前選的加選項目按鈕
-            document.querySelectorAll("#options .btn").forEach(btn => {
-                if (localStorage.getItem("option-" + btn.textContent) === "selected") {
-                    btn.classList.add("selected");
-                    selected.push(btn.textContent);
-                }
-            });
-
-            // 恢復套餐選擇
-            ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
-                if (localStorage.getItem("pkg-" + pkg) === "selected") {
-                    document.getElementById("pkg" + pkg).classList.add("selected");
-                    togglePackage(pkg); // 重新計算總金額
-                }
-            });
+            renderSelectedOptions();
+            const currentPage = localStorage.getItem("currentPage") || "page1";
+            document.getElementById("page1").classList.toggle("hidden", currentPage === "page2");
+            document.getElementById("page2").classList.toggle("hidden", currentPage === "page1");
             updateTotal();
-        }
-
-        // 保存選項到 localStorage
-        window.addEventListener("beforeunload", () => {
-            document.querySelectorAll("#options .btn").forEach(btn => {
-                localStorage.setItem("option-" + btn.textContent, btn.classList.contains("selected") ?
-                    "selected" : "");
-            });
-            ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
-                localStorage.setItem("pkg-" + pkg, document.getElementById("pkg" + pkg).classList.contains(
-                    "selected") ? "selected" : "");
-            });
-        });
+        };
     </script>
+
 </body>
