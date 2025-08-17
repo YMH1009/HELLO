@@ -212,11 +212,61 @@
             border-color: #27AE60;
         }
 
-        .gift-info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            font-style: italic;
+        .additional-items {
+            border: 2px solid #FF8C00;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+            background: linear-gradient(135deg, #FFF8DC, #FFFACD);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+        }
+
+        .additional-items h3 {
+            color: #FF6600;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #FF8C00;
+            padding-bottom: 8px;
+        }
+
+        .basic-checkup {
+            border: 2px solid #4682B4;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+            background: linear-gradient(135deg, #E6F3FF, #F0F8FF);
+            box-shadow: 0 4px 15px rgba(70, 130, 180, 0.2);
+        }
+
+        .basic-checkup h3 {
+            color: #4682B4;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #4682B4;
+            padding-bottom: 8px;
+        }
+
+        .selected-options {
+            border: 2px solid #32CD32;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+            background: linear-gradient(135deg, #F0FFF0, #F5FFFA);
+            box-shadow: 0 4px 15px rgba(50, 205, 50, 0.2);
+        }
+
+        .selected-options h3 {
+            color: #228B22;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #32CD32;
+            padding-bottom: 8px;
         }
     </style>
 </head>
@@ -252,7 +302,7 @@
                 <button class="btn" id="opt8" onclick="toggleOption(this)">眼底攝影</button>
             </div>
             <div class="option">
-                <button class="btn" id="opt9" onclick="toggleOption(this)">動脈硬化</button>
+                <button class="btn" id="opt9" onclick="toggleOption(this)">ABI</button>
             </div>
         </div>
 
@@ -384,22 +434,39 @@
 
     <div id="page2" class="hidden">
         <h2>健檢關卡進度</h2>
-        <div id="selectedOptions"></div>
-        <div class="station">
-            <button class="btn" id="height" onclick="markDone(this)">身高</button>
+
+        <!-- 9選2的基本項目區塊 -->
+        <div class="selected-options">
+            <h3>🔹 已選擇項目 (9選2)</h3>
+            <div id="selectedOptions"></div>
         </div>
-        <div class="station">
-            <button class="btn" id="fat" onclick="markDone(this)">體脂</button>
+
+        <!-- 基本檢查關卡區塊 (移到上方) -->
+        <div class="basic-checkup">
+            <h3>🏥 基本檢查關卡</h3>
+            <div class="station">
+                <button class="btn" id="height" onclick="markDone(this)">身高</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="fat" onclick="markDone(this)">體脂</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="blood" onclick="markDone(this)">抽血</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="dr" onclick="markDone(this)">理學檢查</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="xray" onclick="markDone(this)">X光</button>
+            </div>
         </div>
-        <div class="station">
-            <button class="btn" id="blood" onclick="markDone(this)">抽血</button>
+
+        <!-- 加做項目區塊 (移到下方) -->
+        <div class="additional-items">
+            <h3>🔸 加做項目</h3>
+            <div id="additionalItems"></div>
         </div>
-        <div class="station">
-            <button class="btn" id="dr" onclick="markDone(this)">理學檢查</button>
-        </div>
-        <div class="station">
-            <button class="btn" id="xray" onclick="markDone(this)">X光</button>
-        </div>
+
         <br />
         <button class="btn" onclick="goBack()">返回</button>
     </div>
@@ -506,6 +573,26 @@
                         packageTotals[pkg] = getPackagePrice(pkg);
                         const btn = document.getElementById('pkg' + pkg);
                         if (btn) btn.classList.add('selected');
+
+                        // A套餐特殊處理：確保頸動脈超音波與眼底攝影的互斥狀態
+                        if (pkg === 'A') {
+                            // 先設定所有A套餐項目為選中
+                            document.querySelectorAll("#itemsA .pkg-item").forEach(innerBtn => {
+                                innerBtn.classList.add("selected");
+                            });
+                            // 然後根據URL參數決定頸動脈超音波與眼底攝影的狀態
+                            // 預設選擇頸動脈超音波
+                            const pkgItems = params.get('pkgItems');
+                            if (pkgItems && pkgItems.includes('pkgA6')) {
+                                // 如果URL中有眼底攝影，則選眼底攝影
+                                document.getElementById("pkgA5").classList.remove("selected");
+                                document.getElementById("pkgA6").classList.add("selected");
+                            } else {
+                                // 否則預設選頸動脈超音波
+                                document.getElementById("pkgA5").classList.add("selected");
+                                document.getElementById("pkgA6").classList.remove("selected");
+                            }
+                        }
                     }
                 });
             }
@@ -861,6 +948,15 @@
             document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
                 if (btn.classList.contains("selected")) {
                     innerBtn.classList.add("selected");
+
+                    // A套餐特殊處理：預設選擇頸動脈超音波，取消眼底攝影
+                    if (pkg === "A") {
+                        if (innerBtn.id === "pkgA5") { // 頸動脈超音波
+                            innerBtn.classList.add("selected");
+                        } else if (innerBtn.id === "pkgA6") { // 眼底攝影
+                            innerBtn.classList.remove("selected");
+                        }
+                    }
                 } else {
                     innerBtn.classList.remove("selected");
                 }
@@ -882,6 +978,28 @@
                         clearPackage("D");
                     }
 
+                    btn.classList.toggle("selected");
+                    updateTotal();
+                    updateURL();
+                } else {
+                    // A套餐特殊處理：頸動脈超音波與眼底攝影二選一
+                    if (pkg === "A" && (btn.id === "pkgA5" || btn.id === "pkgA6")) {
+                        // 如果點擊的是頸動脈超音波
+                        if (btn.id === "pkgA5") {
+                            document.getElementById("pkgA5").classList.add("selected");
+                            document.getElementById("pkgA6").classList.remove("selected");
+                        }
+                        // 如果點擊的是眼底攝影
+                        else if (btn.id === "pkgA6") {
+                            document.getElementById("pkgA6").classList.add("selected");
+                            document.getElementById("pkgA5").classList.remove("selected");
+                        }
+                        updateTotal();
+                        updateURL();
+                        return;
+                    }
+
+                    // 其他套餐項目的正常切換邏輯
                     btn.classList.toggle("selected");
                     updateTotal();
                     updateURL();
@@ -994,13 +1112,16 @@
         }
 
         function renderSelectedOptions() {
-            let box = document.getElementById("selectedOptions");
-            box.innerHTML = "";
+            let selectedBox = document.getElementById("selectedOptions");
+            let additionalBox = document.getElementById("additionalItems");
+            selectedBox.innerHTML = "";
+            additionalBox.innerHTML = "";
 
             // 獲取當前完成狀態以便恢復
             const params = new URLSearchParams(window.location.search);
             const doneItems = params.get('done') ? params.get('done').split(',') : [];
 
+            // 只渲染9選2的基本項目到selectedOptions
             selected.forEach(name => {
                 let btn = document.createElement("button");
                 btn.className = "btn";
@@ -1018,12 +1139,17 @@
                     }
                 }
 
-                box.appendChild(btn);
+                selectedBox.appendChild(btn);
             });
 
+            // 檢查是否有加做項目需要顯示
+            let hasAdditionalItems = false;
+
+            // 套餐項目放入additionalItems
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
                 document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
                     if (innerBtn.classList.contains("selected")) {
+                        hasAdditionalItems = true;
                         let btn = document.createElement("button");
                         btn.className = "btn";
                         btn.textContent = innerBtn.textContent;
@@ -1042,13 +1168,14 @@
                             }
                         }
 
-                        box.appendChild(btn);
+                        additionalBox.appendChild(btn);
                     }
                 });
             });
 
-            // 新增單項加做項目到第二頁
+            // 單項加做項目放入additionalItems
             document.querySelectorAll(".single-item.selected").forEach(singleBtn => {
+                hasAdditionalItems = true;
                 let btn = document.createElement("button");
                 btn.className = "btn";
                 btn.textContent = singleBtn.textContent;
@@ -1066,11 +1193,12 @@
                     }
                 }
 
-                box.appendChild(btn);
+                additionalBox.appendChild(btn);
             });
 
-            // 新增贈送項目到第二頁
+            // 贈送項目放入additionalItems
             if (selectedGift) {
+                hasAdditionalItems = true;
                 let giftBtn = document.getElementById(selectedGift);
                 let btn = document.createElement("button");
                 btn.className = "btn";
@@ -1089,12 +1217,13 @@
                     }
                 }
 
-                box.appendChild(btn);
+                additionalBox.appendChild(btn);
             }
 
-            // 如果IGE被自動選擇
+            // IGE贈品放入additionalItems
             const igeGift = document.getElementById('giftIGE');
             if (igeGift.classList.contains('auto-selected')) {
+                hasAdditionalItems = true;
                 let btn = document.createElement("button");
                 btn.className = "btn";
                 btn.textContent = "🎁 " + igeGift.textContent;
@@ -1112,7 +1241,15 @@
                     }
                 }
 
-                box.appendChild(btn);
+                additionalBox.appendChild(btn);
+            }
+
+            // 如果沒有加做項目，隱藏加做項目區塊
+            const additionalBlock = document.querySelector('.additional-items');
+            if (!hasAdditionalItems) {
+                additionalBlock.style.display = 'none';
+            } else {
+                additionalBlock.style.display = 'block';
             }
         }
 
@@ -1153,3 +1290,4 @@
     </script>
 
 </body>
+
