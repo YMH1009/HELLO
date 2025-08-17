@@ -1,6 +1,6 @@
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>健檢流程控制台</title>
     <style>
         body {
@@ -58,10 +58,35 @@
         }
 
         #signature {
-            border: 1px solid #000;
+            border: 2px solid #000;
             width: 300px;
             height: 150px;
             margin: 10px auto;
+            cursor: crosshair;
+            background: white;
+        }
+
+        #signatureContainer {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .signature-controls {
+            margin: 10px 0;
+        }
+
+        .signature-controls button {
+            margin: 5px;
+            padding: 8px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .signature-controls button:hover {
+            background: #0056b3;
         }
 
         #total {
@@ -150,7 +175,7 @@
         </div>
 
         <div style="margin-top:20px;">
-            <button class="btn" onclick="toggleAddons()">加做項目 / 簽名 / 長截圖</button>
+            <button class="btn" onclick="toggleAddons()">加做項目</button>
         </div>
 
         <div id="addons" class="hidden">
@@ -228,11 +253,18 @@
             </div>
 
             <div id="total">總金額: 0 元</div>
-            <canvas id="signature"></canvas>
-            <br>
-            <button class="btn" onclick="alert('長截圖功能尚未完成')">長截圖</button>
-            <br>
-            <br>
+            
+            <div id="signatureContainer">
+                <h4>請在下方簽名：</h4>
+                <canvas id="signature" width="300" height="150"></canvas>
+                <div class="signature-controls">
+                    <button onclick="clearSignature()">清除簽名</button>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="takeScreenshot()">長截圖</button>
+            <br />
+            <br />
         </div>
 
         <button class="btn" onclick="confirmPage1()">OK</button>
@@ -256,7 +288,7 @@
         <div class="station">
             <button class="btn" id="xray" onclick="markDone(this)">X光</button>
         </div>
-        <br>
+        <br />
         <button class="btn" onclick="goBack()">返回</button>
     </div>
 
@@ -270,6 +302,186 @@
             E: 0,
             F: 0
         };
+
+        // 签名相关变量
+        let isDrawing = false;
+        let canvas, ctx;
+
+        // 初始化签名画布
+        function initSignature() {
+            canvas = document.getElementById('signature');
+            ctx = canvas.getContext('2d');
+            
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            
+            // 鼠标事件
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // 触摸事件（移动设备）
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                saveSignature(); // 停止绘制时保存签名
+            }
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            } else if (e.type === 'touchmove' && isDrawing) {
+                ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                ctx.stroke();
+            }
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 清除签名时也清除本地存储
+            localStorage.removeItem('signature');
+        }
+
+        // 保存签名到本地存储
+        function saveSignature() {
+            const signatureData = canvas.toDataURL();
+            localStorage.setItem('signature', signatureData);
+        }
+
+        // 加载签名从本地存储
+        function loadSignature() {
+            const signatureData = localStorage.getItem('signature');
+            if (signatureData) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = signatureData;
+            }
+        }
+
+        async function takeScreenshot() {
+            try {
+                // 使用html2canvas库来截图
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                document.head.appendChild(script);
+                
+                script.onload = async function() {
+                    try {
+                        // 显示截图中的提示
+                        const loadingMsg = document.createElement('div');
+                        loadingMsg.textContent = '正在生成截图...';
+                        loadingMsg.style.position = 'fixed';
+                        loadingMsg.style.top = '10px';
+                        loadingMsg.style.right = '10px';
+                        loadingMsg.style.background = '#007bff';
+                        loadingMsg.style.color = 'white';
+                        loadingMsg.style.padding = '10px';
+                        loadingMsg.style.borderRadius = '5px';
+                        loadingMsg.style.zIndex = '9999';
+                        document.body.appendChild(loadingMsg);
+
+                        // 获取整个页面的实际高度
+                        const body = document.body;
+                        const html = document.documentElement;
+                        const pageHeight = Math.max(
+                            body.scrollHeight, 
+                            body.offsetHeight, 
+                            html.clientHeight, 
+                            html.scrollHeight, 
+                            html.offsetHeight
+                        );
+                        const pageWidth = Math.max(
+                            body.scrollWidth, 
+                            body.offsetWidth, 
+                            html.clientWidth, 
+                            html.scrollWidth, 
+                            html.offsetWidth
+                        );
+
+                        const canvas = await html2canvas(document.body, {
+                            height: pageHeight,
+                            width: pageWidth,
+                            useCORS: true,
+                            allowTaint: true,
+                            scale: 1,
+                            scrollX: 0,
+                            scrollY: 0,
+                            windowWidth: pageWidth,
+                            windowHeight: pageHeight,
+                            x: 0,
+                            y: 0,
+                            backgroundColor: '#ffffff',
+                            removeContainer: false,
+                            foreignObjectRendering: true
+                        });
+                        
+                        // 移除加载提示
+                        document.body.removeChild(loadingMsg);
+                        
+                        // 将canvas转换为blob
+                        canvas.toBlob(async function(blob) {
+                            try {
+                                // 复制到剪贴板
+                                await navigator.clipboard.write([
+                                    new ClipboardItem({ 'image/png': blob })
+                                ]);
+                                alert('完整页面截图已复制到剪贴板！\n可以直接粘贴到其他应用中使用。');
+                            } catch (err) {
+                                console.error('复制到剪贴板失败:', err);
+                                // 备用方案：创建下载链接
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = '健检流程-' + new Date().toISOString().slice(0,10) + '.png';
+                                a.click();
+                                URL.revokeObjectURL(url);
+                                alert('完整页面截图已下载到本地！');
+                            }
+                        }, 'image/png', 1.0);
+                    } catch (error) {
+                        console.error('截图失败:', error);
+                        alert('截图功能出现问题，请尝试以下备用方案：\n1. 使用浏览器打印功能（Ctrl+P）\n2. 使用浏览器开发者工具的设备模拟功能截图\n3. 使用第三方截图工具');
+                    }
+                };
+                
+                script.onerror = function() {
+                    alert('截图功能加载失败，请尝试：\n1. 检查网络连接\n2. 使用浏览器打印功能（Ctrl+P）');
+                };
+            } catch (error) {
+                console.error('截图功能初始化失败:', error);
+                alert('截图功能暂不可用，建议使用浏览器打印功能（Ctrl+P）保存页面');
+            }
+        }
 
         function toggleOption(btn) {
             if (btn.classList.contains("selected")) {
@@ -285,14 +497,14 @@
                 selected.push(btn.textContent);
                 localStorage.setItem(btn.id, "selected");
             }
+            localStorage.setItem('selectedOptions', JSON.stringify(selected));
         }
 
         function toggleAddons() {
             document.getElementById("addons").classList.toggle("hidden");
         }
 
-        function togglePackage(pkg) {
-            let btn = document.getElementById("pkg" + pkg);
+        function getPackagePrice(pkg) {
             const packagePrice = {
                 A: 3000,
                 B: 2200,
@@ -301,6 +513,11 @@
                 E: 2000,
                 F: 2000
             };
+            return packagePrice[pkg];
+        }
+
+        function togglePackage(pkg) {
+            let btn = document.getElementById("pkg" + pkg);
             if (pkg === "D") {
                 document.getElementById("pkgE").classList.remove("selected");
                 packageTotals["E"] = 0;
@@ -312,24 +529,34 @@
                 localStorage.removeItem("pkgD");
             }
             btn.classList.toggle("selected");
-            packageTotals[pkg] = btn.classList.contains("selected") ? packagePrice[pkg] : 0;
-            if (btn.classList.contains("selected")) localStorage.setItem("pkg" + pkg, "selected");
-            else localStorage.removeItem("pkg" + pkg);
+            packageTotals[pkg] = btn.classList.contains("selected") ? getPackagePrice(pkg) : 0;
+            if (btn.classList.contains("selected")) {
+                localStorage.setItem("pkg" + pkg, "selected");
+            } else {
+                localStorage.removeItem("pkg" + pkg);
+            }
             document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
-                if (btn.classList.contains("selected")) innerBtn.classList.add("selected");
-                else innerBtn.classList.remove("selected");
+                if (btn.classList.contains("selected")) {
+                    innerBtn.classList.add("selected");
+                    localStorage.setItem(innerBtn.id, "selected");
+                } else {
+                    innerBtn.classList.remove("selected");
+                    localStorage.removeItem(innerBtn.id);
+                }
             });
             updateTotal();
         }
 
-        // 內部按鈕
         document.querySelectorAll(".pkg-item").forEach(btn => {
             btn.addEventListener("click", function () {
                 let pkg = btn.dataset.pkg;
                 if (!document.getElementById("pkg" + pkg).classList.contains("selected")) {
                     btn.classList.toggle("selected");
-                    if (btn.classList.contains("selected")) localStorage.setItem(btn.id, "selected");
-                    else localStorage.removeItem(btn.id);
+                    if (btn.classList.contains("selected")) {
+                        localStorage.setItem(btn.id, "selected");
+                    } else {
+                        localStorage.removeItem(btn.id);
+                    }
                     updateTotal();
                 }
             });
@@ -377,8 +604,8 @@
                 box.appendChild(btn);
             });
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
-                if (document.getElementById("pkg" + pkg).classList.contains("selected")) {
-                    document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
+                document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
+                    if (innerBtn.classList.contains("selected")) {
                         let btn = document.createElement("button");
                         btn.className = "btn";
                         btn.textContent = innerBtn.textContent;
@@ -387,20 +614,11 @@
                             markDone(btn);
                         }
                         box.appendChild(btn);
-                    });
-                } else {
-                    document.querySelectorAll("#items" + pkg + " .pkg-item.selected").forEach(innerBtn => {
-                        let btn = document.createElement("button");
-                        btn.className = "btn";
-                        btn.textContent = innerBtn.textContent;
-                        btn.id = pkg + "-" + innerBtn.textContent;
-                        btn.onclick = function () {
-                            markDone(btn);
-                        }
-                        box.appendChild(btn);
-                    });
-                }
+                    }
+                });
             });
+            
+            // 恢复第二页按钮的完成状态
             document.querySelectorAll("#selectedOptions button").forEach(btn => {
                 if (localStorage.getItem(btn.id) === "done") {
                     btn.classList.add("done");
@@ -430,39 +648,63 @@
                 button.classList.remove("done");
                 button.textContent = button.textContent.replace(" ✅", "");
                 localStorage.removeItem(button.id);
-            } else alert("輸入錯誤，請重新操作！");
+            } else {
+                alert("輸入錯誤，請重新操作！");
+            }
         }
 
+        // 页面加载时初始化
         window.onload = function () {
+            // 加载选中的选项
             selected = [];
-            for (let i = 1; i <= 8; i++) {
-                let btn = document.getElementById("opt" + i);
-                if (localStorage.getItem(btn.id) === "selected" && selected.length < 2) {
+            document.querySelectorAll("#options .btn").forEach(btn => {
+                if (localStorage.getItem(btn.id) === "selected") {
                     btn.classList.add("selected");
                     selected.push(btn.textContent);
-                } else {
-                    btn.classList.remove("selected");
-                    localStorage.removeItem(btn.id);
                 }
-            }
+            });
+
+            // 加载套餐选择状态
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
-                if (localStorage.getItem("pkg" + pkg) === "selected") togglePackage(pkg);
+                const pkgBtn = document.getElementById("pkg" + pkg);
+                if (localStorage.getItem("pkg" + pkg) === "selected") {
+                    pkgBtn.classList.add("selected");
+                    packageTotals[pkg] = getPackagePrice(pkg);
+                    document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
+                        innerBtn.classList.add("selected");
+                    });
+                }
             });
+
+            // 加载套餐项目状态
             document.querySelectorAll(".pkg-item").forEach(btn => {
-                if (localStorage.getItem(btn.id) === "selected") btn.classList.add("selected");
+                if (localStorage.getItem(btn.id) === "selected") {
+                    btn.classList.add("selected");
+                }
             });
-            document.querySelectorAll(".station .btn").forEach(btn => {
+
+            // 加载第二页按钮状态
+            document.querySelectorAll("#page2 .btn").forEach(btn => {
                 if (localStorage.getItem(btn.id) === "done") {
                     btn.classList.add("done");
-                    if (!btn.textContent.includes("✅")) btn.textContent += " ✅";
+                    if (!btn.textContent.includes("✅")) {
+                        btn.textContent += " ✅";
+                    }
                 }
             });
-            renderSelectedOptions();
-            const currentPage = localStorage.getItem("currentPage") || "page1";
-            document.getElementById("page1").classList.toggle("hidden", currentPage === "page2");
-            document.getElementById("page2").classList.toggle("hidden", currentPage === "page1");
+
+            // 检查当前页面状态
+            const currentPage = localStorage.getItem("currentPage");
+            if (currentPage === "page2") {
+                document.getElementById("page1").classList.add("hidden");
+                document.getElementById("page2").classList.remove("hidden");
+                renderSelectedOptions();
+            }
+
             updateTotal();
-        };
+            initSignature();
+            loadSignature(); // 加载保存的签名
+        }
     </script>
 
 </body>
