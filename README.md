@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
@@ -466,3 +468,5 @@
     </script>
 
 </body>
+
+</html>
