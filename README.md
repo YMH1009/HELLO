@@ -1342,7 +1342,7 @@
         }
 
         function confirmPage1() {
-            let pwd = prompt("請輸入驗證碼");
+            let pwd = prompt("請由諮詢人員輸入驗證碼");
             if (!pwd || pwd.toLowerCase() !== "s1") {
                 alert("驗證失敗");
                 return;
@@ -1518,7 +1518,7 @@
         }
 
         function goBack() {
-            let pw = prompt("請輸入驗證碼");
+            let pw = prompt("請由諮詢人員輸入驗證碼");
             if (pw && pw.toLowerCase() === "s2") {
                 currentPage = 1;
                 document.getElementById("page2").classList.add("hidden");
@@ -1528,7 +1528,7 @@
         }
 
         function markDone(button) {
-            let input = prompt("輸入 'ok' 標示完成，'xx' 取消完成");
+            let input = prompt("請由操作人員確認");
             if (!input) return;
 
             input = input.toLowerCase();
@@ -1554,3 +1554,4 @@
     </script>
 
 </body>
+
