@@ -137,6 +137,53 @@
             color: white;
         }
 
+        /* A套餐二選一項目特殊樣式 */
+
+        .package-items button.exclusive-option {
+            border: 2px solid #FF6B35;
+            position: relative;
+        }
+
+        .package-items button.exclusive-option.selected {
+            background-color: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+
+        .package-items button.exclusive-option:not(.selected) {
+            background-color: #FFE5D9;
+            color: #FF6B35;
+        }
+
+        /* 全局互斥項目樣式（9選2中的頸動脈超音波與眼底攝影） */
+
+        .btn.exclusive-global {
+            border: 2px solid #9C27B0;
+            position: relative;
+        }
+
+        .btn.exclusive-global.selected {
+            background-color: #9C27B0;
+            color: white;
+            border-color: #9C27B0;
+        }
+
+        .btn.exclusive-global:not(.selected) {
+            background-color: #F3E5F5;
+            color: #9C27B0;
+        }
+
+        /* 贈品中的頸動脈超音波特殊樣式 */
+
+        .gift-item#giftCarotid {
+            border-color: #9C27B0;
+        }
+
+        .gift-item#giftCarotid.selected {
+            background-color: #9C27B0;
+            border-color: #7B1FA2;
+        }
+
         #selectedOptions button {
             margin: 5px;
         }
@@ -268,6 +315,18 @@
             border-bottom: 2px solid #32CD32;
             padding-bottom: 8px;
         }
+
+        /* A套餐提示區域 */
+
+        .exclusive-hint {
+            background: #FFF3E0;
+            border: 1px solid #FF9800;
+            border-radius: 5px;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #E65100;
+        }
     </style>
 </head>
 
@@ -275,7 +334,8 @@
     <div class="status-indicator" id="statusIndicator">已選擇: 0/2</div>
 
     <div id="page1">
-        <h2>加選項目 (9選2)</h2>
+        <h2>公費項目 (9選2)</h2>
+
         <div id="options">
             <div class="option">
                 <button class="btn" id="opt1" onclick="toggleOption(this)">腹部超音波</button>
@@ -321,8 +381,11 @@
                         <button data-price="900" class="pkg-item" data-pkg="A" id="pkgA2">高敏感C反應蛋白 900元</button>
                         <button data-price="800" class="pkg-item" data-pkg="A" id="pkgA3">心肌旋轉蛋白 800元</button>
                         <button data-price="1600" class="pkg-item" data-pkg="A" id="pkgA4">B型利納肽前驅物 1600元</button>
-                        <button data-price="1200" class="pkg-item" data-pkg="A" data-single="true" id="pkgA5">頸動脈超音波 1200元</button>
-                        <button data-price="1200" class="pkg-item" data-pkg="A" data-single="true" id="pkgA6">眼底攝影 1200元</button>
+                        <button data-price="1200" class="pkg-item exclusive-option" data-pkg="A" data-single="true" id="pkgA5">頸動脈超音波 1200元</button>
+                        <button data-price="1200" class="pkg-item exclusive-option" data-pkg="A" data-single="true" id="pkgA6">眼底攝影 1200元</button>
+                    </div>
+                    <div class="exclusive-hint">
+                        💡 頸動脈超音波與眼底攝影二選一
                     </div>
                 </div>
                 <!-- B套餐 -->
@@ -342,7 +405,7 @@
                 <div class="package-box">
                     <button class="btn" id="pkgC" onclick="togglePackage('C')">C套餐 優惠價2500元</button>
                     <div class="package-items" id="itemsC">
-                        <button data-price="500" class="pkg-item" data-pkg="C" id="pkgC1">解肢酶 500元</button>
+                        <button data-price="500" class="pkg-item" data-pkg="C" id="pkgC1">解脂酶 500元</button>
                         <button data-price="800" class="pkg-item" data-pkg="C" id="pkgC2">胃癌 800元</button>
                         <button data-price="700" class="pkg-item" data-pkg="C" id="pkgC3">胰臟癌 700元</button>
                         <button data-price="1200" class="pkg-item" data-pkg="C" id="pkgC4">C13 1200元</button>
@@ -437,7 +500,7 @@
 
         <!-- 9選2的基本項目區塊 -->
         <div class="selected-options">
-            <h3>🔹 已選擇項目 (9選2)</h3>
+            <h3>🔹 公費項目 (9選2)</h3>
             <div id="selectedOptions"></div>
         </div>
 
@@ -448,13 +511,34 @@
                 <button class="btn" id="height" onclick="markDone(this)">身高</button>
             </div>
             <div class="station">
-                <button class="btn" id="fat" onclick="markDone(this)">體脂</button>
+                <button class="btn" id="weightFat" onclick="markDone(this)">體重體脂</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="boneDensity" onclick="markDone(this)">骨質密度</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="waistHearing" onclick="markDone(this)">腰圍聽力</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="vision" onclick="markDone(this)">視力</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="eyePressure" onclick="markDone(this)">眼壓</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="bloodPressure" onclick="markDone(this)">血壓</button>
             </div>
             <div class="station">
                 <button class="btn" id="blood" onclick="markDone(this)">抽血</button>
             </div>
             <div class="station">
-                <button class="btn" id="dr" onclick="markDone(this)">理學檢查</button>
+                <button class="btn" id="ecg" onclick="markDone(this)">心電圖</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="doctor" onclick="markDone(this)">醫師</button>
+            </div>
+            <div class="station">
+                <button class="btn" id="urine" onclick="markDone(this)">尿液</button>
             </div>
             <div class="station">
                 <button class="btn" id="xray" onclick="markDone(this)">X光</button>
@@ -490,6 +574,151 @@
         // 签名相关变量
         let isDrawing = false;
         let canvas, ctx;
+
+        // 需要在第二頁顯示的項目列表
+        const allowedItems = [
+            '頸動脈超音波',
+            '眼底攝影',
+            'C13',
+            'HRV',
+            '腹部超音波',
+            '甲狀腺超音波',
+            '攝護腺超音波',
+            '乳房超音波',
+            '婦科超音波',
+            'E66',
+            'E110'
+        ];
+
+        // 移除文字中的價格部分，只保留名稱
+        function extractItemName(text) {
+            // 移除價格（如 " 900元", " 1200元"等）
+            return text.replace(/\s+\d+元$/, '').trim();
+        }
+
+        // 檢查項目是否在允許列表中
+        function isAllowedItem(itemText) {
+            const itemName = extractItemName(itemText);
+            return allowedItems.includes(itemName);
+        }
+
+        // 處理A套餐中頸動脈超音波與眼底攝影的互斥邏輯
+        function handlePackageAExclusive(clickedBtn) {
+            const pkgA5 = document.getElementById("pkgA5"); // 頸動脈超音波
+            const pkgA6 = document.getElementById("pkgA6"); // 眼底攝影
+
+            if (clickedBtn.id === "pkgA5") {
+                // 點擊頸動脈超音波
+                pkgA5.classList.add("selected");
+                pkgA6.classList.remove("selected");
+            } else if (clickedBtn.id === "pkgA6") {
+                // 點擊眼底攝影
+                pkgA6.classList.add("selected");
+                pkgA5.classList.remove("selected");
+            }
+        }
+
+        // 處理非套餐中頸動脈超音波與眼底攝影的全局互斥邏輯
+        function handleCarotidEyeExclusive() {
+            // 檢查所有可能的頸動脈超音波和眼底攝影選項
+            const carotidOptions = [{
+                    id: 'opt3',
+                    text: '頸動脈超音波'
+                }, // 9選2中的選項
+                {
+                    id: 'pkgA5',
+                    text: '頸動脈超音波'
+                }, // A套餐中的選項
+                {
+                    id: 'giftCarotid',
+                    text: '頸動脈超音波'
+                } // 贈品中的選項
+            ];
+
+            const eyeOptions = [{
+                    id: 'opt8',
+                    text: '眼底攝影'
+                }, // 9選2中的選項
+                {
+                    id: 'pkgA6',
+                    text: '眼底攝影'
+                }, // A套餐中的選項
+                {
+                    id: 'giftEye',
+                    text: '眼底攝影'
+                } // 贈品中的選項（如果有的話）
+            ];
+
+            let selectedCarotid = null;
+            let selectedEye = null;
+
+            // 找出目前選中的頸動脈超音波和眼底攝影
+            carotidOptions.forEach(option => {
+                const btn = document.getElementById(option.id);
+                if (btn && btn.classList.contains('selected')) {
+                    selectedCarotid = option;
+                }
+            });
+
+            eyeOptions.forEach(option => {
+                const btn = document.getElementById(option.id);
+                if (btn && btn.classList.contains('selected')) {
+                    selectedEye = option;
+                }
+            });
+
+            // 如果同時選中了頸動脈超音波和眼底攝影，則保留最後選擇的那個
+            if (selectedCarotid && selectedEye) {
+                // 這裡需要知道最後點擊的是哪個，由調用方決定
+                return {
+                    carotidOptions,
+                    eyeOptions,
+                    selectedCarotid,
+                    selectedEye
+                };
+            }
+
+            return null;
+        }
+
+        // 取消頸動脈超音波的所有選擇
+        function clearAllCarotidSelections() {
+            const carotidSelectors = ['#opt3', '#pkgA5', '#giftCarotid'];
+            carotidSelectors.forEach(selector => {
+                const btn = document.querySelector(selector);
+                if (btn && btn.classList.contains('selected')) {
+                    btn.classList.remove('selected');
+
+                    // 特別處理9選2的選項
+                    if (selector === '#opt3') {
+                        selected = selected.filter(x => x !== '頸動脈超音波');
+                        delete selectedButtons['opt3'];
+                    }
+
+                    // 特別處理贈品選擇
+                    if (selector === '#giftCarotid' && selectedGift === 'giftCarotid') {
+                        selectedGift = null;
+                    }
+                }
+            });
+        }
+
+        // 取消眼底攝影的所有選擇
+        function clearAllEyeSelections() {
+            const eyeSelectors = ['#opt8', '#pkgA6'];
+            eyeSelectors.forEach(selector => {
+                const btn = document.querySelector(selector);
+                if (btn && btn.classList.contains('selected')) {
+                    btn.classList.remove('selected');
+
+                    // 特別處理9選2的選項
+                    if (selector === '#opt8') {
+                        selected = selected.filter(x => x !== '眼底攝影');
+                        delete selectedButtons['opt8'];
+                    }
+                }
+            });
+        }
 
         // URL參數處理函數
         function updateURL() {
@@ -763,6 +992,13 @@
                 return;
             }
 
+            const isCarotid = btn.textContent.includes('頸動脈超音波');
+
+            // 處理頸動脈超音波贈品的互斥邏輯
+            if (isCarotid) {
+                clearAllEyeSelections(); // 取消所有眼底攝影選擇
+            }
+
             // 清除其他超音波選擇（除了IGE）
             document.querySelectorAll('.gift-item:not(#giftIGE)').forEach(giftBtn => {
                 giftBtn.classList.remove('selected');
@@ -882,6 +1118,9 @@
         }
 
         function toggleOption(btn) {
+            const isCarotid = btn.textContent.includes('頸動脈超音波');
+            const isEye = btn.textContent.includes('眼底攝影');
+
             if (btn.classList.contains("selected")) {
                 btn.classList.remove("selected");
                 selected = selected.filter(x => x !== btn.textContent);
@@ -891,6 +1130,14 @@
                     alert("最多選2個");
                     return;
                 }
+
+                // 處理頸動脈超音波與眼底攝影的互斥邏輯
+                if (isCarotid) {
+                    clearAllEyeSelections(); // 取消所有眼底攝影選擇
+                } else if (isEye) {
+                    clearAllCarotidSelections(); // 取消所有頸動脈超音波選擇
+                }
+
                 btn.classList.add("selected");
                 selected.push(btn.textContent);
                 selectedButtons[btn.id] = true;
@@ -969,6 +1216,9 @@
         document.querySelectorAll(".pkg-item").forEach(btn => {
             btn.addEventListener("click", function () {
                 let pkg = btn.dataset.pkg;
+                const isCarotid = btn.textContent.includes('頸動脈超音波');
+                const isEye = btn.textContent.includes('眼底攝影');
+
                 if (!document.getElementById("pkg" + pkg).classList.contains("selected")) {
                     // D和E套餐內部項目互斥邏輯 - 無論是否已選中，都要清除對方套餐
                     if (pkg === "D") {
@@ -978,22 +1228,20 @@
                         clearPackage("D");
                     }
 
+                    // 處理非套餐狀態下的頸動脈超音波與眼底攝影互斥
+                    if (isCarotid) {
+                        clearAllEyeSelections(); // 取消所有眼底攝影選擇
+                    } else if (isEye) {
+                        clearAllCarotidSelections(); // 取消所有頸動脈超音波選擇
+                    }
+
                     btn.classList.toggle("selected");
                     updateTotal();
                     updateURL();
                 } else {
                     // A套餐特殊處理：頸動脈超音波與眼底攝影二選一
                     if (pkg === "A" && (btn.id === "pkgA5" || btn.id === "pkgA6")) {
-                        // 如果點擊的是頸動脈超音波
-                        if (btn.id === "pkgA5") {
-                            document.getElementById("pkgA5").classList.add("selected");
-                            document.getElementById("pkgA6").classList.remove("selected");
-                        }
-                        // 如果點擊的是眼底攝影
-                        else if (btn.id === "pkgA6") {
-                            document.getElementById("pkgA6").classList.add("selected");
-                            document.getElementById("pkgA5").classList.remove("selected");
-                        }
+                        handlePackageAExclusive(btn);
                         updateTotal();
                         updateURL();
                         return;
@@ -1145,103 +1393,119 @@
             // 檢查是否有加做項目需要顯示
             let hasAdditionalItems = false;
 
-            // 套餐項目放入additionalItems
+            // 套餐項目放入additionalItems（只有允許的項目）
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
                 document.querySelectorAll("#items" + pkg + " .pkg-item").forEach(innerBtn => {
                     if (innerBtn.classList.contains("selected")) {
-                        hasAdditionalItems = true;
-                        let btn = document.createElement("button");
-                        btn.className = "btn";
-                        btn.textContent = innerBtn.textContent;
-                        btn.id = pkg + "-" + innerBtn.textContent;
-                        btn.onclick = function () {
-                            markDone(btn);
-                        }
-
-                        // 恢復完成狀態
-                        const btnIdentifier = pkg + "-" + innerBtn.textContent;
-                        if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(
-                                btnIdentifier)) {
-                            btn.classList.add('done');
-                            if (!btn.textContent.includes('✅')) {
-                                btn.textContent += ' ✅';
+                        const itemText = innerBtn.textContent;
+                        // 只有在允許列表中的項目才會顯示在第二頁
+                        if (isAllowedItem(itemText)) {
+                            hasAdditionalItems = true;
+                            let btn = document.createElement("button");
+                            btn.className = "btn";
+                            btn.textContent = extractItemName(itemText); // 移除價格，只顯示名稱
+                            btn.id = pkg + "-" + extractItemName(itemText);
+                            btn.onclick = function () {
+                                markDone(btn);
                             }
-                        }
 
-                        additionalBox.appendChild(btn);
+                            // 恢復完成狀態
+                            const btnIdentifier = pkg + "-" + extractItemName(itemText);
+                            if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(
+                                    btnIdentifier)) {
+                                btn.classList.add('done');
+                                if (!btn.textContent.includes('✅')) {
+                                    btn.textContent += ' ✅';
+                                }
+                            }
+
+                            additionalBox.appendChild(btn);
+                        }
                     }
                 });
             });
 
-            // 單項加做項目放入additionalItems
+            // 單項加做項目放入additionalItems（只有允許的項目）
             document.querySelectorAll(".single-item.selected").forEach(singleBtn => {
-                hasAdditionalItems = true;
-                let btn = document.createElement("button");
-                btn.className = "btn";
-                btn.textContent = singleBtn.textContent;
-                btn.id = "single-" + singleBtn.textContent;
-                btn.onclick = function () {
-                    markDone(btn);
-                }
-
-                // 恢復完成狀態
-                const btnIdentifier = "single-" + singleBtn.textContent;
-                if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
-                    btn.classList.add('done');
-                    if (!btn.textContent.includes('✅')) {
-                        btn.textContent += ' ✅';
+                const itemText = singleBtn.textContent;
+                // 只有在允許列表中的項目才會顯示在第二頁
+                if (isAllowedItem(itemText)) {
+                    hasAdditionalItems = true;
+                    let btn = document.createElement("button");
+                    btn.className = "btn";
+                    btn.textContent = extractItemName(itemText); // 移除價格，只顯示名稱
+                    btn.id = "single-" + extractItemName(itemText);
+                    btn.onclick = function () {
+                        markDone(btn);
                     }
-                }
 
-                additionalBox.appendChild(btn);
+                    // 恢復完成狀態
+                    const btnIdentifier = "single-" + extractItemName(itemText);
+                    if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
+                        btn.classList.add('done');
+                        if (!btn.textContent.includes('✅')) {
+                            btn.textContent += ' ✅';
+                        }
+                    }
+
+                    additionalBox.appendChild(btn);
+                }
             });
 
-            // 贈送項目放入additionalItems
+            // 贈送項目放入additionalItems（只有允許的項目）
             if (selectedGift) {
-                hasAdditionalItems = true;
                 let giftBtn = document.getElementById(selectedGift);
-                let btn = document.createElement("button");
-                btn.className = "btn";
-                btn.textContent = "🎁 " + giftBtn.textContent;
-                btn.id = "gift-" + selectedGift;
-                btn.onclick = function () {
-                    markDone(btn);
-                }
-
-                // 恢復完成狀態
-                const btnIdentifier = "gift-" + selectedGift;
-                if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
-                    btn.classList.add('done');
-                    if (!btn.textContent.includes('✅')) {
-                        btn.textContent += ' ✅';
+                const giftText = giftBtn.textContent;
+                // 只有在允許列表中的項目才會顯示在第二頁
+                if (isAllowedItem(giftText)) {
+                    hasAdditionalItems = true;
+                    let btn = document.createElement("button");
+                    btn.className = "btn";
+                    btn.textContent = "🎁 " + extractItemName(giftText); // 移除價格，只顯示名稱
+                    btn.id = "gift-" + selectedGift;
+                    btn.onclick = function () {
+                        markDone(btn);
                     }
-                }
 
-                additionalBox.appendChild(btn);
+                    // 恢復完成狀態
+                    const btnIdentifier = "gift-" + selectedGift;
+                    if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
+                        btn.classList.add('done');
+                        if (!btn.textContent.includes('✅')) {
+                            btn.textContent += ' ✅';
+                        }
+                    }
+
+                    additionalBox.appendChild(btn);
+                }
             }
 
-            // IGE贈品放入additionalItems
+            // IGE贈品放入additionalItems（IGE不在允許列表中，所以不會顯示）
             const igeGift = document.getElementById('giftIGE');
             if (igeGift.classList.contains('auto-selected')) {
-                hasAdditionalItems = true;
-                let btn = document.createElement("button");
-                btn.className = "btn";
-                btn.textContent = "🎁 " + igeGift.textContent;
-                btn.id = "gift-giftIGE";
-                btn.onclick = function () {
-                    markDone(btn);
-                }
-
-                // 恢復完成狀態
-                const btnIdentifier = "gift-giftIGE";
-                if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
-                    btn.classList.add('done');
-                    if (!btn.textContent.includes('✅')) {
-                        btn.textContent += ' ✅';
+                const igeText = igeGift.textContent;
+                // IGE不在允許列表中，所以不會顯示在第二頁
+                if (isAllowedItem(igeText)) {
+                    hasAdditionalItems = true;
+                    let btn = document.createElement("button");
+                    btn.className = "btn";
+                    btn.textContent = "🎁 " + extractItemName(igeText);
+                    btn.id = "gift-giftIGE";
+                    btn.onclick = function () {
+                        markDone(btn);
                     }
-                }
 
-                additionalBox.appendChild(btn);
+                    // 恢復完成狀態
+                    const btnIdentifier = "gift-giftIGE";
+                    if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
+                        btn.classList.add('done');
+                        if (!btn.textContent.includes('✅')) {
+                            btn.textContent += ' ✅';
+                        }
+                    }
+
+                    additionalBox.appendChild(btn);
+                }
             }
 
             // 如果沒有加做項目，隱藏加做項目區塊
@@ -1290,4 +1554,3 @@
     </script>
 
 </body>
-
