@@ -1,5 +1,4 @@
 
-
 <head>
     <meta charset="UTF-8" />
     <title>健檢流程控制台</title>
@@ -284,13 +283,58 @@
             box-shadow: 0 4px 15px rgba(70, 130, 180, 0.2);
         }
 
+        .basic-checkup-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .basic-checkup h3 {
             color: #4682B4;
-            margin-bottom: 15px;
             font-size: 18px;
             text-align: center;
             border-bottom: 2px solid #4682B4;
             padding-bottom: 8px;
+            margin: 0;
+        }
+
+        .basic-checkup-input {
+            width: 100px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .basic-checkup-confirm {
+            padding: 8px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .basic-checkup-confirm:hover {
+            background: #0056b3;
+        }
+
+        .basic-checkup-correct {
+            padding: 8px 15px;
+            background: #FF8C00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .basic-checkup-correct:hover {
+            background: #e07b00;
         }
 
         .selected-options {
@@ -539,7 +583,12 @@
         <h2>健檢關卡進度</h2>
 
         <div class="basic-checkup">
-            <h3>🏥 基本檢查關卡</h3>
+            <div class="basic-checkup-header">
+                <h3>🏥 基本檢查關卡</h3>
+                <input type="number" id="basicCheckupInput" class="basic-checkup-input" placeholder="輸入數值" min="0">
+                <button class="basic-checkup-confirm" onclick="confirmBasicCheckupInput()">確定</button>
+                <button class="basic-checkup-correct" onclick="correctBasicCheckupInput()">更正</button>
+            </div>
             <div class="station">
                 <button class="btn" id="height" onclick="markDone(this)">身高</button>
             </div>
@@ -611,6 +660,7 @@
         let barcodeValue = '';
         let serialNumber = '';
         let age = '';
+        let basicCheckupValue = '';
 
         const allowedItems = [
             '頸動脈超音波', '眼底攝影', 'C13', 'HRV', '腹部超音波',
@@ -754,6 +804,26 @@
             updateURL();
         }
 
+        function confirmBasicCheckupInput() {
+            const inputValue = document.getElementById('basicCheckupInput').value.trim();
+            if (inputValue === '' || isNaN(inputValue) || inputValue < 0) {
+                alert('請輸入有效的非負數值！');
+                return;
+            }
+            basicCheckupValue = inputValue;
+            document.getElementById('basicCheckupInput').disabled = true;
+            updateURL();
+        }
+
+        function correctBasicCheckupInput() {
+            const pwd = prompt('請輸入驗證碼');
+            if (pwd && pwd.toUpperCase() === 'H') {
+                document.getElementById('basicCheckupInput').disabled = false;
+            } else {
+                alert('驗證碼錯誤，請輸入正確的驗證碼「H」！');
+            }
+        }
+
         function updateURL() {
             const state = {
                 page: currentPage,
@@ -767,7 +837,8 @@
                 done: [],
                 barcode: barcodeValue,
                 serial: serialNumber,
-                age: age
+                age: age,
+                basicCheckup: basicCheckupValue
             };
             document.querySelectorAll(".pkg-item.selected").forEach(btn => {
                 state.pkgItems.push(btn.id);
@@ -867,11 +938,16 @@
             barcodeValue = params.get('barcode') || '';
             serialNumber = params.get('serial') || '';
             age = params.get('age') || '';
+            basicCheckupValue = params.get('basicCheckup') || '';
             if (barcodeValue || serialNumber || age) {
                 document.getElementById('barcodeInput').value = barcodeValue;
                 document.getElementById('serialInput').value = serialNumber;
                 document.getElementById('ageInput').value = age;
                 displayInfo();
+            }
+            if (basicCheckupValue) {
+                document.getElementById('basicCheckupInput').value = basicCheckupValue;
+                document.getElementById('basicCheckupInput').disabled = true;
             }
             const doneItems = params.get('done');
             if (doneItems) {
@@ -1418,4 +1494,3 @@
         }
     </script>
 </body>
-
