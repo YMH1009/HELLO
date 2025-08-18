@@ -1,5 +1,3 @@
-
-
 <head>
     <meta charset="UTF-8" />
     <title>健檢流程控制台</title>
@@ -398,6 +396,14 @@
             background: #0056b3;
         }
 
+        .input-section .correct-btn {
+            background: #FF8C00;
+        }
+
+        .input-section .correct-btn:hover {
+            background: #e07b00;
+        }
+
         .info-display {
             margin: 10px auto;
             font-size: 32px;
@@ -420,6 +426,7 @@
             <input type="text" inputmode="numeric" id="serialInput" placeholder="輸入流水號">
             <input type="number" id="ageInput" placeholder="輸入年齡" min="0" max="150">
             <button onclick="confirmInputs()">確定</button>
+            <button class="correct-btn" onclick="correctInputs()">更改</button>
         </div>
         <div id="infoDisplayPage1" class="info-display"></div>
         <canvas id="barcodePage1" class="barcode-container"></canvas>
@@ -662,6 +669,7 @@
         let serialNumber = '';
         let age = '';
         let basicCheckupValue = '';
+        let inputsLocked = false; // 新增變數來追蹤輸入框是否鎖定
 
         const allowedItems = [
             '頸動脈超音波', '眼底攝影', 'C13', 'HRV', '腹部超音波',
@@ -801,8 +809,26 @@
                 alert('請輸入有效的年齡（0-150）！');
                 return;
             }
+            // 鎖定輸入框
+            inputsLocked = true;
+            document.getElementById('barcodeInput').disabled = true;
+            document.getElementById('serialInput').disabled = true;
+            document.getElementById('ageInput').disabled = true;
             displayInfo();
             updateURL();
+        }
+
+        function correctInputs() {
+            const pwd = prompt('請輸入驗證碼');
+            if (pwd && pwd.toLowerCase() === 'x') {
+                // 解鎖輸入框
+                inputsLocked = false;
+                document.getElementById('barcodeInput').disabled = false;
+                document.getElementById('serialInput').disabled = false;
+                document.getElementById('ageInput').disabled = false;
+            } else {
+                alert('驗證碼錯誤，請輸入正確的驗證碼！');
+            }
         }
 
         function confirmBasicCheckupInput() {
@@ -839,7 +865,8 @@
                 barcode: barcodeValue,
                 serial: serialNumber,
                 age: age,
-                basicCheckup: basicCheckupValue
+                basicCheckup: basicCheckupValue,
+                inputsLocked: inputsLocked ? '1' : '0' // 保存輸入框鎖定狀態
             };
             document.querySelectorAll(".pkg-item.selected").forEach(btn => {
                 state.pkgItems.push(btn.id);
@@ -940,10 +967,16 @@
             serialNumber = params.get('serial') || '';
             age = params.get('age') || '';
             basicCheckupValue = params.get('basicCheckup') || '';
+            inputsLocked = params.get('inputsLocked') === '1'; // 載入輸入框鎖定狀態
             if (barcodeValue || serialNumber || age) {
                 document.getElementById('barcodeInput').value = barcodeValue;
                 document.getElementById('serialInput').value = serialNumber;
                 document.getElementById('ageInput').value = age;
+                if (inputsLocked) {
+                    document.getElementById('barcodeInput').disabled = true;
+                    document.getElementById('serialInput').disabled = true;
+                    document.getElementById('ageInput').disabled = true;
+                }
                 displayInfo();
             }
             if (basicCheckupValue) {
@@ -1495,4 +1528,3 @@
         }
     </script>
 </body>
-
