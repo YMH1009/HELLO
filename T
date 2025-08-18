@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>我的網站</title>
+</head>
+<body>
+  <h1>哈囉！這是我的網站 🎉</h1>
+  <p>這裡完全是我自己寫的 HTML，不會有 GitHub 自動加的標題。</p>
+</body>
+</html>
