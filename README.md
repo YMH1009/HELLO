@@ -1,4 +1,5 @@
 
+
 <head>
     <meta charset="UTF-8" />
     <title>健檢流程控制台</title>
@@ -766,9 +767,9 @@
                 JsBarcode(`#${canvasId}`, value, {
                     format: "CODE128",
                     displayValue: true,
-                    height: 100,
-                    width: 3.5,
-                    fontSize: 28
+                    height: 80,
+                    width: 3,
+                    fontSize: 24
                 });
             } else {
                 const canvas = document.getElementById(canvasId);
@@ -820,7 +821,7 @@
             if (pwd && pwd.toUpperCase() === 'H') {
                 document.getElementById('basicCheckupInput').disabled = false;
             } else {
-                alert('驗證碼錯誤，請輸入正確的驗證碼「H」！');
+                alert('驗證碼錯誤，請輸入正確的驗證碼！');
             }
         }
 
@@ -1318,7 +1319,7 @@
         }
 
         function confirmPage1() {
-            let pwd = prompt("請由諮詢人員輸入驗證碼");
+            let pwd = prompt("請洽諮詢人員輸入驗證碼");
             if (!pwd || pwd.toLowerCase() !== "s1") {
                 alert("驗證失敗");
                 return;
@@ -1461,7 +1462,7 @@
         }
 
         function goBack() {
-            let pw = prompt("請由諮詢人員輸入驗證碼");
+            let pw = prompt("請洽諮詢人員輸入驗證碼");
             if (pw && pw.toLowerCase() === "s2") {
                 currentPage = 1;
                 document.getElementById("page2").classList.add("hidden");
@@ -1494,3 +1495,4 @@
         }
     </script>
 </body>
+
