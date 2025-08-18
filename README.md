@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en-US">
 
 <head>
     <meta charset="UTF-8" />
@@ -715,9 +717,9 @@
                 JsBarcode(`#${canvasId}`, value, {
                     format: "CODE128",
                     displayValue: true,
-                    height: 120,
-                    width: 4,
-                    fontSize: 32
+                    height: 100,
+                    width: 3.5,
+                    fontSize: 28
                 });
             } else {
                 const canvas = document.getElementById(canvasId);
@@ -729,7 +731,7 @@
         function displayInfo() {
             const display1 = document.getElementById('infoDisplayPage1');
             const display2 = document.getElementById('infoDisplayPage2');
-            const text = (serialNumber ? `流水號: ${serialNumber}` : '') + (serialNumber && age ? ' ' : '') + (age ?
+            const text = (serialNumber ? `流水號: ${serialNumber}` : '') + (serialNumber && age ? '   ' : '') + (age ?
                 `年齡: ${age}` : '');
             display1.textContent = text;
             display2.textContent = text;
@@ -1418,3 +1420,4 @@
     </script>
 </body>
 
+</html>
