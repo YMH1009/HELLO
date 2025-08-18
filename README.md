@@ -431,7 +431,7 @@
         <div id="infoDisplayPage1" class="info-display"></div>
         <canvas id="barcodePage1" class="barcode-container"></canvas>
 
-        <h2>公費項目 (9選2)</h2>
+        <h2>公費項目 (選2)</h2>
         <div id="options">
             <div class="option">
                 <button class="btn" id="opt1" onclick="toggleOption(this)">腹部超音波</button>
@@ -636,7 +636,7 @@
         </div>
 
         <div class="selected-options">
-            <h3>🔹 公費項目 (9選2)</h3>
+            <h3>🔹 公費項目 (選2)</h3>
             <div id="selectedOptions"></div>
         </div>
 
