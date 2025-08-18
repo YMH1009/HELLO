@@ -1532,10 +1532,10 @@
             if (!input) return;
 
             input = input.toLowerCase();
-            if (input === "ok") {
+            if (input === "v") {
                 button.classList.add("done");
                 if (!button.textContent.includes("✅")) button.textContent += " ✅";
-            } else if (input === "xx") {
+            } else if (input === "x") {
                 button.classList.remove("done");
                 button.textContent = button.textContent.replace(" ✅", "");
             } else {
