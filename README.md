@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en-US">
 
 <head>
     <meta charset="UTF-8" />
@@ -321,8 +323,6 @@
             color: #E65100;
         }
 
-        /* 新增輸入欄位樣式 */
-
         .input-section {
             margin: 20px auto;
             max-width: 600px;
@@ -356,7 +356,7 @@
 
         .info-display {
             margin: 10px auto;
-            font-size: 16px;
+            font-size: 32px;
             font-weight: bold;
             color: #333;
         }
@@ -371,10 +371,9 @@
     <div class="status-indicator" id="statusIndicator">已選擇: 0/2</div>
 
     <div id="page1">
-        <!-- 新增輸入欄位區域 -->
         <div class="input-section">
-            <input type="number" id="barcodeInput" placeholder="輸入條碼號碼" min="0">
-            <input type="number" id="serialInput" placeholder="輸入流水號" min="0">
+            <input type="text" inputmode="numeric" id="barcodeInput" placeholder="輸入條碼號碼">
+            <input type="text" inputmode="numeric" id="serialInput" placeholder="輸入流水號">
             <input type="number" id="ageInput" placeholder="輸入年齡" min="0" max="150">
             <button onclick="confirmInputs()">確定</button>
         </div>
@@ -714,13 +713,13 @@
         }
 
         function generateBarcode(value, canvasId) {
-            if (value && !isNaN(value)) {
+            if (value && !isNaN(value) && value.trim() !== '') {
                 JsBarcode(`#${canvasId}`, value, {
                     format: "CODE128",
                     displayValue: true,
-                    height: 60,
-                    width: 2,
-                    fontSize: 16
+                    height: 120,
+                    width: 4,
+                    fontSize: 32
                 });
             } else {
                 const canvas = document.getElementById(canvasId);
@@ -732,7 +731,7 @@
         function displayInfo() {
             const display1 = document.getElementById('infoDisplayPage1');
             const display2 = document.getElementById('infoDisplayPage2');
-            const text = (serialNumber ? `流水號: ${serialNumber}` : '') + (serialNumber && age ? ' | ' : '') + (age ?
+            const text = (serialNumber ? `流水號: ${serialNumber}` : '') + (serialNumber && age ? ' ' : '') + (age ?
                 `年齡: ${age}` : '');
             display1.textContent = text;
             display2.textContent = text;
@@ -741,9 +740,9 @@
         }
 
         function confirmInputs() {
-            barcodeValue = document.getElementById('barcodeInput').value;
-            serialNumber = document.getElementById('serialInput').value;
-            age = document.getElementById('ageInput').value;
+            barcodeValue = document.getElementById('barcodeInput').value.trim();
+            serialNumber = document.getElementById('serialInput').value.trim();
+            age = document.getElementById('ageInput').value.trim();
             if (barcodeValue === '' && serialNumber === '' && age === '') {
                 alert('請至少輸入一個欄位！');
                 return;
@@ -1420,3 +1419,5 @@
         }
     </script>
 </body>
+
+</html>
