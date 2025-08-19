@@ -43,6 +43,16 @@
             color: white;
         }
 
+        .btn.rejected {
+            background-color: #FF60AF;
+            color: white;
+        }
+
+        .btn.recheck {
+            background-color: #FFA042;
+            color: white;
+        }
+
         .hidden {
             display: none;
         }
@@ -154,28 +164,23 @@
         }
 
         .btn.exclusive-global {
-            border: 2px solid #9C27B0;
+            border: 2px solid #FF8A95;
             position: relative;
         }
 
         .btn.exclusive-global.selected {
-            background-color: #9C27B0;
+            background-color: #FF8A95;
             color: white;
-            border-color: #9C27B0;
+            border-color: #FF8A95;
         }
 
         .btn.exclusive-global:not(.selected) {
             background-color: #F3E5F5;
-            color: #9C27B0;
+            color: #FF8A95;
         }
 
         .gift-item#giftCarotid {
-            border-color: #9C27B0;
-        }
-
-        .gift-item#giftCarotid.selected {
-            background-color: #9C27B0;
-            border-color: #7B1FA2;
+            border-color: #FF8A95;
         }
 
         #selectedOptions button {
@@ -263,13 +268,21 @@
             box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
         }
 
+        .additional-items-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .additional-items h3 {
             color: #FF6600;
-            margin-bottom: 15px;
             font-size: 18px;
             text-align: center;
             border-bottom: 2px solid #FF8C00;
             padding-bottom: 8px;
+            margin: 0;
         }
 
         .basic-checkup {
@@ -413,6 +426,49 @@
 
         .barcode-container {
             margin: 10px auto;
+        }
+
+        .c13-input-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .c13-input {
+            width: 100px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .c13-confirm {
+            padding: 8px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .c13-confirm:hover {
+            background: #0056b3;
+        }
+
+        .c13-correct {
+            padding: 8px 15px;
+            background: #FF8C00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .c13-correct:hover {
+            background: #e07b00;
         }
     </style>
 </head>
@@ -597,9 +653,7 @@
                 <button class="basic-checkup-confirm" onclick="confirmBasicCheckupInput()">確定</button>
                 <button class="basic-checkup-correct" onclick="correctBasicCheckupInput()">更正</button>
             </div>
-            <div class="station">
-                <button class="btn" id="height" onclick="markDone(this)">身高</button>
-            </div>
+
             <div class="station">
                 <button class="btn" id="weightFat" onclick="markDone(this)">體重體脂</button>
             </div>
@@ -641,7 +695,14 @@
         </div>
 
         <div class="additional-items">
-            <h3>🔸 加做項目</h3>
+            <div class="additional-items-header">
+                <h3>🔸 加做項目</h3>
+                <div id="c13InputContainer" class="c13-input-container hidden">
+                    <input type="text" id="c13Input" class="c13-input">
+                    <button class="c13-confirm" onclick="confirmC13Input()">確定</button>
+                    <button class="c13-correct" onclick="correctC13Input()">更改</button>
+                </div>
+            </div>
             <div id="additionalItems"></div>
         </div>
 
@@ -669,7 +730,9 @@
         let serialNumber = '';
         let age = '';
         let basicCheckupValue = '';
-        let inputsLocked = false; // 新增變數來追蹤輸入框是否鎖定
+        let inputsLocked = false;
+        let c13InputValue = '';
+        let c13InputLocked = false;
 
         const allowedItems = [
             '頸動脈超音波', '眼底攝影', 'C13', 'HRV', '腹部超音波',
@@ -809,7 +872,6 @@
                 alert('請輸入有效的年齡（0-150）！');
                 return;
             }
-            // 鎖定輸入框
             inputsLocked = true;
             document.getElementById('barcodeInput').disabled = true;
             document.getElementById('serialInput').disabled = true;
@@ -821,7 +883,6 @@
         function correctInputs() {
             const pwd = prompt('請輸入驗證碼');
             if (pwd && pwd.toLowerCase() === 'x') {
-                // 解鎖輸入框
                 inputsLocked = false;
                 document.getElementById('barcodeInput').disabled = false;
                 document.getElementById('serialInput').disabled = false;
@@ -844,8 +905,30 @@
 
         function correctBasicCheckupInput() {
             const pwd = prompt('請輸入驗證碼');
-            if (pwd && pwd.toUpperCase() === 'H') {
+            if (pwd && pwd.toUpperCase() === 'X') {
                 document.getElementById('basicCheckupInput').disabled = false;
+            } else {
+                alert('驗證碼錯誤，請輸入正確的驗證碼！');
+            }
+        }
+
+        function confirmC13Input() {
+            const input = document.getElementById('c13Input');
+            c13InputValue = input.value.trim();
+            if (c13InputValue === '') {
+                alert('請輸入C13相關資料！');
+                return;
+            }
+            c13InputLocked = true;
+            input.disabled = true;
+            updateURL();
+        }
+
+        function correctC13Input() {
+            const pwd = prompt('請輸入驗證碼');
+            if (pwd && pwd.toUpperCase() === 'X') {
+                c13InputLocked = false;
+                document.getElementById('c13Input').disabled = false;
             } else {
                 alert('驗證碼錯誤，請輸入正確的驗證碼！');
             }
@@ -862,11 +945,14 @@
                 gift: selectedGift,
                 addons: addonsVisible ? '1' : '0',
                 done: [],
+                recheck: [],
                 barcode: barcodeValue,
                 serial: serialNumber,
                 age: age,
                 basicCheckup: basicCheckupValue,
-                inputsLocked: inputsLocked ? '1' : '0' // 保存輸入框鎖定狀態
+                inputsLocked: inputsLocked ? '1' : '0',
+                c13Input: c13InputValue,
+                c13InputLocked: c13InputLocked ? '1' : '0'
             };
             document.querySelectorAll(".pkg-item.selected").forEach(btn => {
                 state.pkgItems.push(btn.id);
@@ -877,9 +963,27 @@
             document.querySelectorAll(".btn.done").forEach(btn => {
                 state.done.push(btn.id);
             });
+            document.querySelectorAll(".btn.rejected").forEach(btn => {
+                state.done.push('rejected-' + btn.id);
+            });
+            document.querySelectorAll(".btn.recheck").forEach(btn => {
+                state.recheck.push('recheck-' + btn.id);
+            });
             if (currentPage === 2) {
                 document.querySelectorAll("#selectedOptions .btn.done").forEach(btn => {
                     state.done.push('dynamic-' + btn.id);
+                });
+                document.querySelectorAll("#selectedOptions .btn.rejected").forEach(btn => {
+                    state.done.push('rejected-' + btn.id);
+                });
+                document.querySelectorAll("#additionalItems .btn.done").forEach(btn => {
+                    state.done.push('dynamic-' + btn.id);
+                });
+                document.querySelectorAll("#additionalItems .btn.rejected").forEach(btn => {
+                    state.done.push('rejected-' + btn.id);
+                });
+                document.querySelectorAll("#additionalItems .btn.recheck").forEach(btn => {
+                    state.recheck.push('recheck-' + btn.id);
                 });
             }
             const params = new URLSearchParams();
@@ -967,7 +1071,9 @@
             serialNumber = params.get('serial') || '';
             age = params.get('age') || '';
             basicCheckupValue = params.get('basicCheckup') || '';
-            inputsLocked = params.get('inputsLocked') === '1'; // 載入輸入框鎖定狀態
+            inputsLocked = params.get('inputsLocked') === '1';
+            c13InputValue = params.get('c13Input') || '';
+            c13InputLocked = params.get('c13InputLocked') === '1';
             if (barcodeValue || serialNumber || age) {
                 document.getElementById('barcodeInput').value = barcodeValue;
                 document.getElementById('serialInput').value = serialNumber;
@@ -984,18 +1090,39 @@
                 document.getElementById('basicCheckupInput').disabled = true;
             }
             const doneItems = params.get('done');
+            const recheckItems = params.get('recheck') || '';
             if (doneItems) {
                 doneItems.split(',').forEach(btnId => {
                     if (btnId) {
                         if (btnId.startsWith('dynamic-')) {
                             return;
                         }
-                        const btn = document.getElementById(btnId);
-                        if (btn) {
-                            btn.classList.add('done');
-                            if (!btn.textContent.includes('✅')) {
-                                btn.textContent += ' ✅';
+                        if (btnId.startsWith('rejected-')) {
+                            const actualId = btnId.replace('rejected-', '');
+                            const btn = document.getElementById(actualId);
+                            if (btn) {
+                                btn.classList.add('rejected');
+                                if (!btn.textContent.includes('🚫')) btn.textContent += ' 🚫';
                             }
+                        } else {
+                            const btn = document.getElementById(btnId);
+                            if (btn) {
+                                btn.classList.add('done');
+                                if (!btn.textContent.includes('✅')) btn.textContent += ' ✅';
+                            }
+                        }
+                    }
+                });
+            }
+            if (recheckItems) {
+                recheckItems.split(',').forEach(btnId => {
+                    if (btnId) {
+                        const actualId = btnId.replace('recheck-', '');
+                        const btn = document.getElementById(actualId);
+                        if (btn) {
+                            btn.classList.add('recheck');
+                            btn.textContent = btn.textContent.replace(' ✅', '').replace(' 🚫', '').replace(
+                                ' 🔄', '') + ' 🔄';
                         }
                     }
                 });
@@ -1012,9 +1139,29 @@
                                 const btn = document.getElementById(actualId);
                                 if (btn) {
                                     btn.classList.add('done');
-                                    if (!btn.textContent.includes('✅')) {
-                                        btn.textContent += ' ✅';
-                                    }
+                                    if (!btn.textContent.includes('✅')) btn.textContent += ' ✅';
+                                }
+                            } else if (btnId.startsWith('rejected-')) {
+                                const actualId = btnId.replace('rejected-', '');
+                                const btn = document.getElementById(actualId);
+                                if (btn) {
+                                    btn.classList.add('rejected');
+                                    if (!btn.textContent.includes('🚫')) btn.textContent += ' 🚫';
+                                }
+                            }
+                        });
+                    }, 100);
+                }
+                if (recheckItems) {
+                    setTimeout(() => {
+                        recheckItems.split(',').forEach(btnId => {
+                            if (btnId.startsWith('recheck-')) {
+                                const actualId = btnId.replace('recheck-', '');
+                                const btn = document.getElementById(actualId);
+                                if (btn) {
+                                    btn.classList.add('recheck');
+                                    btn.textContent = btn.textContent.replace(' ✅', '').replace(' 🚫',
+                                        '').replace(' 🔄', '') + ' 🔄';
                                 }
                             }
                         });
@@ -1353,7 +1500,7 @@
 
         function confirmPage1() {
             let pwd = prompt("請洽諮詢人員輸入驗證碼");
-            if (!pwd || pwd.toLowerCase() !== "s1") {
+            if (!pwd || pwd.toLowerCase() !== "2") {
                 alert("驗證失敗");
                 return;
             }
@@ -1375,6 +1522,7 @@
             additionalBox.innerHTML = "";
             const params = new URLSearchParams(window.location.search);
             const doneItems = params.get('done') ? params.get('done').split(',') : [];
+            const recheckItems = params.get('recheck') ? params.get('recheck').split(',') : [];
             let ultrasoundItems = [];
             let otherItems = [];
             selected.forEach(name => {
@@ -1393,10 +1541,17 @@
                 if (doneItems.includes('dynamic-' + name) || doneItems.includes(name)) {
                     btn.classList.add('done');
                     if (!btn.textContent.includes('✅')) btn.textContent += ' ✅';
+                } else if (doneItems.includes('rejected-' + name)) {
+                    btn.classList.add('rejected');
+                    if (!btn.textContent.includes('🚫')) btn.textContent += ' 🚫';
+                } else if (recheckItems.includes('recheck-' + name)) {
+                    btn.classList.add('recheck');
+                    if (!btn.textContent.includes('🔄')) btn.textContent += ' 🔄';
                 }
                 selectedBox.appendChild(btn);
             });
             let hasAdditionalItems = false;
+            let hasC13 = false;
             let additionalUltrasoundItems = [];
             let additionalOtherItems = [];
             ["A", "B", "C", "D", "E", "F"].forEach(pkg => {
@@ -1406,6 +1561,7 @@
                         if (isAllowedItem(itemText)) {
                             hasAdditionalItems = true;
                             const itemName = extractItemName(itemText);
+                            if (itemName === 'C13') hasC13 = true;
                             if (itemName.includes('超音波')) {
                                 additionalUltrasoundItems.push({
                                     text: itemName,
@@ -1426,6 +1582,7 @@
                 if (isAllowedItem(itemText)) {
                     hasAdditionalItems = true;
                     const itemName = extractItemName(itemText);
+                    if (itemName === 'C13') hasC13 = true;
                     if (itemName.includes('超音波')) {
                         additionalUltrasoundItems.push({
                             text: itemName,
@@ -1445,6 +1602,7 @@
                 if (isAllowedItem(giftText)) {
                     hasAdditionalItems = true;
                     const giftName = extractItemName(giftText);
+                    if (giftName === 'C13') hasC13 = true;
                     if (giftName.includes('超音波')) {
                         additionalUltrasoundItems.push({
                             text: "🎁 " + giftName,
@@ -1464,11 +1622,21 @@
                 if (isAllowedItem(igeText)) {
                     hasAdditionalItems = true;
                     const igeName = extractItemName(igeText);
+                    if (igeName === 'C13') hasC13 = true;
                     additionalOtherItems.push({
                         text: "🎁 " + igeName,
                         id: "gift-giftIGE"
                     });
                 }
+            }
+            const c13InputContainer = document.getElementById('c13InputContainer');
+            if (hasC13) {
+                c13InputContainer.classList.remove('hidden');
+                const c13Input = document.getElementById('c13Input');
+                c13Input.value = c13InputValue;
+                if (c13InputLocked) c13Input.disabled = true;
+            } else {
+                c13InputContainer.classList.add('hidden');
             }
             const sortedAdditionalItems = [...additionalUltrasoundItems, ...additionalOtherItems];
             sortedAdditionalItems.forEach(item => {
@@ -1483,6 +1651,12 @@
                 if (doneItems.includes('dynamic-' + btnIdentifier) || doneItems.includes(btnIdentifier)) {
                     btn.classList.add('done');
                     if (!btn.textContent.includes('✅')) btn.textContent += ' ✅';
+                } else if (doneItems.includes('rejected-' + btnIdentifier)) {
+                    btn.classList.add('rejected');
+                    if (!btn.textContent.includes('🚫')) btn.textContent += ' 🚫';
+                } else if (recheckItems.includes('recheck-' + btnIdentifier)) {
+                    btn.classList.add('recheck');
+                    if (!btn.textContent.includes('🔄')) btn.textContent += ' 🔄';
                 }
                 additionalBox.appendChild(btn);
             });
@@ -1496,7 +1670,7 @@
 
         function goBack() {
             let pw = prompt("請洽諮詢人員輸入驗證碼");
-            if (pw && pw.toLowerCase() === "s2") {
+            if (pw && pw.toLowerCase() === "1") {
                 currentPage = 1;
                 document.getElementById("page2").classList.add("hidden");
                 document.getElementById("page1").classList.remove("hidden");
@@ -1505,17 +1679,27 @@
         }
 
         function markDone(button) {
-            let input = prompt("請由操作人員確認");
+            let input = prompt("請由操作人員輸入");
             if (!input) return;
             input = input.toLowerCase();
             if (input === "v") {
+                button.classList.remove("rejected", "recheck");
                 button.classList.add("done");
-                if (!button.textContent.includes("✅")) button.textContent += " ✅";
+                button.textContent = button.textContent.replace(" 🚫", "").replace(" ✅", "").replace(" 🔄", "") + " ✅";
             } else if (input === "x") {
-                button.classList.remove("done");
-                button.textContent = button.textContent.replace(" ✅", "");
+                button.classList.remove("done", "rejected", "recheck");
+                button.textContent = button.textContent.replace(" ✅", "").replace(" 🚫", "").replace(" 🔄", "");
+            } else if (input === "g" && (button.closest('.basic-checkup') || button.closest('#selectedOptions'))) {
+                button.classList.remove("done", "recheck");
+                button.classList.add("rejected");
+                button.textContent = button.textContent.replace(" ✅", "").replace(" 🚫", "").replace(" 🔄", "") + " 🚫";
+            } else if (input === "2" && button.id === "bloodPressure") {
+                button.classList.remove("done", "rejected");
+                button.classList.add("recheck");
+                button.textContent = button.textContent.replace(" ✅", "").replace(" 🚫", "").replace(" 🔄", "") + " 🔄";
             } else {
                 alert("輸入錯誤，請重新操作！");
+                return;
             }
             updateURL();
         }
