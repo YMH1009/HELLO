@@ -756,48 +756,6 @@
             }
         }
 
-        function handleCarotidEyeExclusive() {
-            const carotidOptions = [{
-                id: 'opt3',
-                text: '頸動脈超音波'
-            }, {
-                id: 'pkgA5',
-                text: '頸動脈超音波'
-            }, {
-                id: 'giftCarotid',
-                text: '頸動脈超音波'
-            }];
-            const eyeOptions = [{
-                id: 'opt8',
-                text: '眼底攝影'
-            }, {
-                id: 'pkgA6',
-                text: '眼底攝影'
-            }, {
-                id: 'giftEye',
-                text: '眼底攝影'
-            }];
-            let selectedCarotid = null;
-            let selectedEye = null;
-            carotidOptions.forEach(option => {
-                const btn = document.getElementById(option.id);
-                if (btn && btn.classList.contains('selected')) selectedCarotid = option;
-            });
-            eyeOptions.forEach(option => {
-                const btn = document.getElementById(option.id);
-                if (btn && btn.classList.contains('selected')) selectedEye = option;
-            });
-            if (selectedCarotid && selectedEye) {
-                return {
-                    carotidOptions,
-                    eyeOptions,
-                    selectedCarotid,
-                    selectedEye
-                };
-            }
-            return null;
-        }
-
         function clearAllCarotidSelections() {
             const carotidSelectors = ['#opt3', '#pkgA5', '#giftCarotid'];
             carotidSelectors.forEach(selector => {
@@ -1346,8 +1304,6 @@
         }
 
         function toggleOption(btn) {
-            const isCarotid = btn.textContent.includes('頸動脈超音波');
-            const isEye = btn.textContent.includes('眼底攝影');
             if (btn.classList.contains("selected")) {
                 btn.classList.remove("selected");
                 selected = selected.filter(x => x !== btn.textContent);
@@ -1357,8 +1313,6 @@
                     alert("最多選2個");
                     return;
                 }
-                if (isCarotid) clearAllEyeSelections();
-                else if (isEye) clearAllCarotidSelections();
                 btn.classList.add("selected");
                 selected.push(btn.textContent);
                 selectedButtons[btn.id] = true;
