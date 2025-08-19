@@ -756,8 +756,11 @@
             }
         }
 
-        function clearAllCarotidSelections() {
-            const carotidSelectors = ['#opt3', '#pkgA5', '#giftCarotid'];
+        function clearAllCarotidSelections(source) {
+            const carotidSelectors = ['#pkgA5', '#giftCarotid'];
+            if (source !== 'pkgA5') {
+                carotidSelectors.push('#opt3');
+            }
             carotidSelectors.forEach(selector => {
                 const btn = document.querySelector(selector);
                 if (btn && btn.classList.contains('selected')) {
@@ -773,8 +776,11 @@
             });
         }
 
-        function clearAllEyeSelections() {
-            const eyeSelectors = ['#opt8', '#pkgA6'];
+        function clearAllEyeSelections(source) {
+            const eyeSelectors = ['#pkgA6'];
+            if (source !== 'pkgA6') {
+                eyeSelectors.push('#opt8');
+            }
             eyeSelectors.forEach(selector => {
                 const btn = document.querySelector(selector);
                 if (btn && btn.classList.contains('selected')) {
@@ -1193,16 +1199,6 @@
         function selectGift(btn) {
             if (btn.disabled) return;
             if (btn.id === 'giftIGE') return;
-            const isCarotid = btn.textContent.includes('頸動脈超音波');
-            if (isCarotid) {
-                // 只清除公費項目的眼底攝影（opt8）
-                const opt8 = document.getElementById('opt8');
-                if (opt8 && opt8.classList.contains('selected')) {
-                    opt8.classList.remove('selected');
-                    selected = selected.filter(x => x !== '眼底攝影');
-                    delete selectedButtons['opt8'];
-                }
-            }
             document.querySelectorAll('.gift-item:not(#giftIGE)').forEach(giftBtn => {
                 giftBtn.classList.remove('selected');
             });
@@ -1372,13 +1368,13 @@
         document.querySelectorAll(".pkg-item").forEach(btn => {
             btn.addEventListener("click", function () {
                 let pkg = btn.dataset.pkg;
-                const isCarotid = btn.textContent.includes('頸動脈超音波');
-                const isEye = btn.textContent.includes('眼底攝影');
+                const isCarotid = btn.id === 'pkgA5';
+                const isEye = btn.id === 'pkgA6';
                 if (!document.getElementById("pkg" + pkg).classList.contains("selected")) {
                     if (pkg === "D") clearPackage("E");
                     if (pkg === "E") clearPackage("D");
-                    if (isCarotid) clearAllEyeSelections();
-                    else if (isEye) clearAllCarotidSelections();
+                    if (isCarotid) clearAllEyeSelections(btn.id);
+                    else if (isEye) clearAllCarotidSelections(btn.id);
                     btn.classList.toggle("selected");
                     updateTotal();
                     updateURL();
