@@ -179,8 +179,35 @@
             color: #FF8A95;
         }
 
-        .gift-item#giftCarotid {
-            border-color: #FF8A95;
+        .gift-item {
+            width: 150px;
+            height: 50px;
+            margin: 5px;
+            font-size: 13px;
+            background-color: #FFB3BA;
+            color: #333;
+            border: 2px solid #FF8A95;
+            transition: all 0.3s ease;
+        }
+
+        .gift-item:disabled {
+            background-color: #F0F0F0;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #CCC;
+        }
+
+        .gift-item.selected {
+            background-color: #FF4757;
+            color: white;
+            border-color: #FF3742;
+            transform: scale(1.05);
+        }
+
+        .gift-item.auto-selected {
+            background-color: #2ECC71;
+            color: white;
+            border-color: #27AE60;
         }
 
         #selectedOptions button {
@@ -225,37 +252,6 @@
             color: #FF4757;
             margin-bottom: 15px;
             font-size: 20px;
-        }
-
-        .gift-item {
-            width: 150px;
-            height: 50px;
-            margin: 5px;
-            font-size: 13px;
-            background-color: #FFB3BA;
-            color: #333;
-            border: 2px solid #FF8A95;
-            transition: all 0.3s ease;
-        }
-
-        .gift-item:disabled {
-            background-color: #F0F0F0;
-            color: #999;
-            cursor: not-allowed;
-            border-color: #CCC;
-        }
-
-        .gift-item.selected {
-            background-color: #FF4757;
-            color: white;
-            border-color: #FF3742;
-            transform: scale(1.05);
-        }
-
-        .gift-item.auto-selected {
-            background-color: #2ECC71;
-            color: white;
-            border-color: #27AE60;
         }
 
         .additional-items {
@@ -1240,12 +1236,21 @@
             if (btn.disabled) return;
             if (btn.id === 'giftIGE') return;
             const isCarotid = btn.textContent.includes('頸動脈超音波');
-            if (isCarotid) clearAllEyeSelections();
+            if (isCarotid) {
+                // 只清除公費項目的眼底攝影（opt8）
+                const opt8 = document.getElementById('opt8');
+                if (opt8 && opt8.classList.contains('selected')) {
+                    opt8.classList.remove('selected');
+                    selected = selected.filter(x => x !== '眼底攝影');
+                    delete selectedButtons['opt8'];
+                }
+            }
             document.querySelectorAll('.gift-item:not(#giftIGE)').forEach(giftBtn => {
                 giftBtn.classList.remove('selected');
             });
             btn.classList.add('selected');
             selectedGift = btn.id;
+            updateStatusIndicator();
             updateURL();
         }
 
